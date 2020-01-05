@@ -18,7 +18,7 @@ describe("GET /users는", () => {
       request(app)
         .get("/users")
         .end((err, res) => {
-          res.body.should.be.instanceOf(Array);
+          res.body.data.should.be.instanceOf(Array);
           done();
         });
     });
@@ -38,7 +38,7 @@ describe("GET /users/:id 는", () => {
       request(app)
         .get("/users/1")
         .end((err, res) => {
-          res.body.should.have.property("id", 1);
+          res.body.data.should.have.property("id", 1);
           done();
         });
     });
@@ -75,7 +75,7 @@ describe("POST users는", () => {
         .send({ name })
         .expect(201)
         .end((err, res) => {
-          body = res.body;
+          body = res.body.data;
           done();
         });
     });
@@ -104,7 +104,7 @@ describe("PUT /users/:id", () => {
         .put("/users/1")
         .send({ name })
         .end((err, res) => {
-          res.body.should.have.property("name", name);
+          res.body.data.should.have.property("name", name);
           done();
         });
     });
