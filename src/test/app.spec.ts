@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import request from "supertest";
-import app from "../src/app";
+import app from "../app";
 import "should";
-import { sequelize } from "../src/config/config";
-import User from "../src/config/models/User";
+import { sequelize } from "../config/config";
+import User from "../config/models/User";
 
 describe("app.test", () => {
   const req = request(app);
@@ -19,7 +19,7 @@ describe("app.test", () => {
   });
 });
 
-describe("GET /user는", () => {
+describe("GET /users는", () => {
   const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
   before(() => {
     return sequelize.sync({ force: true });
@@ -39,7 +39,7 @@ describe("GET /user는", () => {
   });
 });
 
-describe("GET /user:id 는", () => {
+describe("GET /users/:id 는", () => {
   const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
   before(() => {
     return sequelize.sync({ force: true });
@@ -74,7 +74,7 @@ describe("GET /user:id 는", () => {
   });
 });
 
-describe("POST user는", () => {
+describe("POST users는", () => {
   before(() => {
     return sequelize.sync({ force: true });
   });
@@ -97,6 +97,92 @@ describe("POST user는", () => {
     it("생성된 유저 객체를 반환한다", done => {
       body.should.have.property("id");
       done();
+    });
+  });
+});
+
+describe("PUT /users/:id", () => {
+  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+
+  before(() => {
+    return sequelize.sync({ force: true });
+  });
+  before(() => {
+    return User.bulkCreate(users);
+  });
+
+  describe("성공시", () => {
+    it("변경된 name을 응답한다.", done => {
+      const name = "kimInJoong";
+      request(app)
+        .put("/users/1")
+        .send({ name })
+        .end((err, res) => {
+          res.body.should.have.property("name", name);
+          done();
+        });
+    });
+  });
+
+  describe("실패시", () => {
+    it("정수가 아닌 id의 경우 400을 응답한다", done => {
+      request(app)
+        .put("/users/one")
+        .expect(400)
+        .end(done);
+    });
+
+    it("name이 없을 경우 400을 응답한다", done => {
+      request(app)
+        .put("/users/1")
+        .send({})
+        .expect(400)
+        .end(done);
+    });
+
+    it("없는 유저일 경우 404를 응답한다", done => {
+      const name = "kimInJoong";
+      request(app)
+        .put("/users/999")
+        .send({ name })
+        .expect(404)
+        .end(done);
+    });
+  });
+});
+
+describe("DELETE /users/:id는", () => {
+  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+
+  before(() => {
+    return sequelize.sync({ force: true });
+  });
+  before(() => {
+    return User.bulkCreate(users);
+  });
+
+  describe("성공시", () => {
+    it("200을 반환한다.", done => {
+      request(app)
+        .delete("/users/1")
+        .expect(200)
+        .end(done);
+    });
+  });
+
+  describe("실패시", () => {
+    it("아이디가 숫자가 아닐경우 400을 반환한다", done => {
+      request(app)
+        .delete("/users/one")
+        .expect(400)
+        .end(done);
+    });
+
+    it("없는 유저일경우 404를 반환한다.", done => {
+      request(app)
+        .delete("/users/999")
+        .expect(404)
+        .end(done);
     });
   });
 });

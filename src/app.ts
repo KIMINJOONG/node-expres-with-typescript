@@ -21,7 +21,7 @@ interface Err extends Error {
 }
 
 // catch 404 and forward to error handler
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req, res, next) => {
   let err = new Error("Not Found") as Err;
   err.status = 404;
   next(err);

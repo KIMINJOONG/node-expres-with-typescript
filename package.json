@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require ts-node/register 'test/**/*.spec.ts'",
+    "test": "mocha --require ts-node/register './src/test/**/*.spec.ts'",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc -p ."
