@@ -24,6 +24,6 @@ export default class Board extends Model<Board> {
   })
   content!: string;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, "userId")
   author!: User;
 }

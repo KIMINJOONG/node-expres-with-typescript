@@ -5,8 +5,6 @@ import {
   Model,
   BeforeCreate,
   BeforeUpdate,
-  BelongsToMany,
-  BelongsTo,
   HasMany
 } from "sequelize-typescript";
 import bcrypt from "bcrypt";
@@ -31,7 +29,7 @@ export default class User extends Model<User> {
   })
   password!: string;
 
-  @HasMany(() => Board, { as: "Boards" })
+  @HasMany(() => Board, "userId")
   boards?: Board[];
 
   public comparePassword(password: string = ""): Promise<boolean> {

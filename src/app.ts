@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import router from "./router";
 import users from "./api/user";
+import boards from "./api/board";
 import morgan from "morgan";
 import { sequelize } from "./config/config";
 
@@ -14,8 +15,8 @@ app.get("/", (request: Request, response: Response, next: NextFunction) => {
   response.send("hello");
 });
 
-app.use("/router", router);
 app.use("/users", users);
+app.use("/boards", boards);
 
 interface Err extends Error {
   status: number;
