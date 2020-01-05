@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../config/models/User";
 import responseMessage from "../../utils/responseMessage";
+import { validationResult } from "express-validator";
+
 export default {
   index: async (req: Request, res: Response) => {
     try {
@@ -36,6 +38,12 @@ export default {
     }
   },
   create: async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log("error : ", errors.array());
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, password } = req.body;
 
     try {

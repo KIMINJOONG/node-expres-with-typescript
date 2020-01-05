@@ -67,21 +67,22 @@ describe("POST users는", () => {
 
   describe("성공시", async () => {
     let name: string = "kim";
-    let body: request.Response;
+    let password: string = "test";
+    let body: any;
 
     before(done => {
       request(app)
         .post("/users")
-        .send({ name })
+        .send({ name, password })
         .expect(201)
         .end((err, res) => {
-          body = res.body.data;
+          body = res.body;
           done();
         });
     });
 
     it("생성된 유저 객체를 반환한다", done => {
-      body.should.have.property("id");
+      body.data.should.have.property("id");
       done();
     });
   });
