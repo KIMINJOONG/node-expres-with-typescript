@@ -1,18 +1,23 @@
 import {
   Table,
   Column,
-  CreatedAt,
-  UpdatedAt,
   DataType,
   Model,
   BeforeCreate,
-  BeforeUpdate
+  BeforeUpdate,
+  BelongsToMany,
+  BelongsTo,
+  HasMany
 } from "sequelize-typescript";
 import bcrypt from "bcrypt";
+import Board from "./Board";
 
 const BCRYPT_ROUNDS = 10;
 
-@Table
+@Table({
+  charset: "utf8mb4", // 한글에 이모티콘까지 가능
+  collate: "utf8mb4_general_ci"
+})
 export default class User extends Model<User> {
   @Column({
     type: DataType.STRING,
@@ -25,6 +30,9 @@ export default class User extends Model<User> {
     comment: "password"
   })
   password!: string;
+
+  @HasMany(() => Board, { as: "Boards" })
+  boards?: Board[];
 
   public comparePassword(password: string = ""): Promise<boolean> {
     return bcrypt.compare(password, this.password);
