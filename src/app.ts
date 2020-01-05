@@ -1,11 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
 import router from "./router";
-import users from "./routes/users";
+import users from "./api/user";
 import morgan from "morgan";
+import { sequelize } from "./config/config";
 
 const app = express();
 
 app.use(morgan("dev"));
+sequelize.sync({ force: true });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get("/", (request: Request, response: Response, next: NextFunction) => {

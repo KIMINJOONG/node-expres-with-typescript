@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import User from "../config/models/User";
+import User from "../../config/models/User";
 
 const router = express.Router();
 
@@ -66,7 +66,6 @@ router.put("/:id", async (req, res, next) => {
     }
     user = await user.update({ name }, { where: { id } });
     await user.save();
-    console.log("updated user : ", user);
     return res.status(200).json(user);
   } catch (error) {
     console.log(error);
