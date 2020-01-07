@@ -54,5 +54,53 @@ export default {
       console.error("error : ", error);
       return res.status(404).json(responseMessage(false, error.message));
     }
+  },
+  update: async (req: Request, res: Response) => {
+    const {
+      params: { id },
+      body: { title }
+    } = req;
+
+    const parsedId: number = parseInt(id);
+    if (Number.isNaN(parsedId)) {
+      return res.status(404).json(responseMessage(false, "잘못된 요청입니다."));
+    }
+
+    try {
+      const board = await Board.findOne({ where: { id: parsedId } });
+      if (!board) {
+        return res
+          .status(400)
+          .json(responseMessage(false, "존재하지않는 게시글입니다."));
+      }
+      await board?.update({ title });
+      await board?.save();
+
+      return res.status(200).json(responseMessage(true, "", board));
+    } catch (error) {
+      return res.status(400).json(responseMessage(false, error.message));
+    }
+  },
+  destroy: async (req: Request, res: Response) => {
+    const {
+      params: { id }
+    } = req;
+
+    const parsedId: number = parseInt(id);
+    if (Number.isNaN(parsedId)) {
+      return res.status(404).json(responseMessage(false, "잘못된 요청입니다."));
+    }
+    try {
+      const board = await Board.findOne({ where: { id: parsedId } });
+      if (!board) {
+        return res
+          .status(400)
+          .json(responseMessage(false, "존재하지않는 게시글입니다."));
+      }
+      await board?.destroy();
+      return res.status(200).json(responseMessage(true, ""));
+    } catch (error) {
+      return res.status(400).json(responseMessage(false, error.message));
+    }
   }
 };
