@@ -7,7 +7,7 @@
 - [x] apply sequelize-typescript
 - [x] user test code
 - [x] user
-- [ ] board test code
+- [x] board test code
 - [ ] board
 
 ---
