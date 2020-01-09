@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../../config/models/User";
 import responseMessage from "../../utils/responseMessage";
 import { validationResult } from "express-validator";
+import createJWT from "../../utils/createJWT";
 
 export default {
   index: async (req: Request, res: Response) => {
@@ -120,6 +121,26 @@ export default {
     } catch (error) {
       console.log(error);
       return res.status(400).json(responseMessage(false, error.message));
+    }
+  },
+  login: async (req: Request, res: Response) => {
+    const {
+      body: { userId, password }
+    } = req;
+    try {
+      const user = await User.findOne({ where: { userId } });
+      if (!user) {
+        return res.json(responseMessage(false, "존재하지 않는 아이디입니다."));
+      }
+      const isLogin = user.comparePassword(password);
+      if (!isLogin) {
+        return res.json(responseMessage(false, "비밀번호가 맞지않습니다."));
+      }
+      const token = await createJWT(user.id);
+      return res.status(200).json(responseMessage(true, "", { token }));
+    } catch (error) {
+      console.log(error);
+      return res.json(responseMessage(false, error.message));
     }
   }
 };

@@ -145,7 +145,7 @@ describe("POST /boards는", () => {
   });
 });
 
-describe.only("PUT /boards/:id는", () => {
+describe("PUT /boards/:id는", () => {
   describe("성공시", () => {
     let name: string = "kim";
     let password: string = "test";
@@ -207,7 +207,7 @@ describe("DELETE /boards/:id", () => {
   describe("성공시", () => {
     it("200을 반환한다.", done => {
       request(app)
-        .delete("/boareds/1")
+        .delete("/boards/1")
         .expect(200)
         .end(done);
     });

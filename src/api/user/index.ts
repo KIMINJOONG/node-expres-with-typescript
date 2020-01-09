@@ -18,4 +18,6 @@ router.put("/:id", userController.update);
 
 router.delete("/:id", userController.destroy);
 
+router.post("/login", userController.login);
+
 export default router;

@@ -6,7 +6,11 @@ import { sequelize } from "../../config/config";
 import User from "../../config/models/User";
 
 describe("GET /users는", () => {
-  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  const users = [
+    { userId: "hi", name: "alice" },
+    { userId: "hehe", name: "bek" },
+    { userId: "huhu", name: "chris" }
+  ];
   before(() => {
     return sequelize.sync({ force: true });
   });
@@ -26,7 +30,11 @@ describe("GET /users는", () => {
 });
 
 describe("GET /users/:id 는", () => {
-  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  const users = [
+    { userId: "hi", name: "alice" },
+    { userId: "hehe", name: "bek" },
+    { userId: "huhu", name: "chris" }
+  ];
   before(() => {
     return sequelize.sync({ force: true });
   });
@@ -89,7 +97,11 @@ describe("POST users는", () => {
 });
 
 describe("PUT /users/:id", () => {
-  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  const users = [
+    { userId: "hi", name: "alice" },
+    { userId: "hehe", name: "bek" },
+    { userId: "huhu", name: "chris" }
+  ];
 
   before(() => {
     return sequelize.sync({ force: true });
@@ -139,7 +151,11 @@ describe("PUT /users/:id", () => {
 });
 
 describe("DELETE /users/:id는", () => {
-  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  const users = [
+    { userId: "hi", name: "alice" },
+    { userId: "hehe", name: "bek" },
+    { userId: "huhu", name: "chris" }
+  ];
 
   before(() => {
     return sequelize.sync({ force: true });
@@ -170,6 +186,38 @@ describe("DELETE /users/:id는", () => {
         .delete("/users/999")
         .expect(404)
         .end(done);
+    });
+  });
+});
+
+describe.only("POST /users/login", () => {
+  const users = [
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
+  ];
+  before(() => {
+    return sequelize.sync({ force: true });
+  });
+  before(() => {
+    return User.bulkCreate(users);
+  });
+
+  describe("성공시", () => {
+    it("토큰을 반환한다.", done => {
+      const userId = "test";
+      const password = "test";
+      request(app)
+        .post("/users/login")
+        .send({
+          userId,
+          password
+        })
+        .end((err, res) => {
+          console.log(res.body);
+          res.body.data.should.have.property("token");
+          done();
+        });
     });
   });
 });

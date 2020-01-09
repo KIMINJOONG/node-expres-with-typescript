@@ -19,6 +19,12 @@ const BCRYPT_ROUNDS = 10;
 export default class User extends Model<User> {
   @Column({
     type: DataType.STRING,
+    comment: "user id"
+  })
+  userId!: string;
+
+  @Column({
+    type: DataType.STRING,
     comment: "이름"
   })
   name!: string;
