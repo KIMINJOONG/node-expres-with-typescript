@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
-import router from "./router";
 import users from "./api/user";
 import boards from "./api/board";
 import morgan from "morgan";
 import { sequelize } from "./config/config";
+import tokenCheck from "./utils/tokenCheck";
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (request: Request, response: Response, next: NextFunction) => {
   response.send("hello");
 });
-
+app.use(tokenCheck);
 app.use("/users", users);
 app.use("/boards", boards);
 
@@ -22,7 +22,6 @@ interface Err extends Error {
   status: number;
   data?: any;
 }
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   let err = new Error("Not Found") as Err;
