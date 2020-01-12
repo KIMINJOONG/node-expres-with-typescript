@@ -10,7 +10,9 @@ const decodeJWT = async (token: string): Promise<User | undefined> => {
 
     const { id } = decoded;
     const user = await User.findOne({ where: { id } });
-    return user;
+    if (user) {
+      return user;
+    }
   }
 };
 export default decodeJWT;
