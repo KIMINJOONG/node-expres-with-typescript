@@ -4,6 +4,8 @@ import { check } from "express-validator";
 
 const router = express.Router();
 
+router.get("/me", userController.me);
+
 router.get("/", userController.index);
 
 router.get("/:id", userController.detail);

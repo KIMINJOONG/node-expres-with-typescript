@@ -11,9 +11,6 @@ app.use(morgan("dev"));
 sequelize.sync({ force: true });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get("/", (request: Request, response: Response, next: NextFunction) => {
-  response.send("hello");
-});
 app.use(tokenCheck);
 app.use("/users", users);
 app.use("/boards", boards);

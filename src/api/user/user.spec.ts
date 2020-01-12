@@ -5,11 +5,62 @@ import "should";
 import { sequelize } from "../../config/config";
 import User from "../../config/models/User";
 
+describe.only("GET /users/me는", () => {
+  const users = [
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
+  ];
+  let token: string = "";
+  before(() => {
+    return sequelize.sync({ force: true });
+  });
+  before(() => {
+    return User.bulkCreate(users);
+  });
+  // before(() => {
+  //   const userId = "test";
+  //   const password = "test";
+  //   request(app)
+  //     .post("/users/login")
+  //     .send({
+  //       userId,
+  //       password
+  //     })
+  //     .end((err, res) => {
+  //       console.log("토큰ㄴㄴㄴㄴ : ", res.body.data);
+  //       return (token = res.body.data.token);
+  //     });
+  // });
+  describe("성공시", () => {
+    it(" 해당 토큰의 유저 객체를 반환", done => {
+      request(app)
+        .get("/users/me")
+        .set(
+          "Authentication",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc4ODM0NDk5fQ.zCoOSgOc-S5VCKkEHqUFUGBWqG_A_XRjRWBfcYT64m4"
+        )
+        .end((err, res: any) => {
+          res.body.data.should.be.property("id", 1);
+          done();
+        });
+    });
+  });
+
+  describe("실패시", () => {
+    it("토큰이 존재하지않을경우 404반환", done => {
+      request(app)
+        .get("/users/me")
+        .expect(404)
+        .end(done);
+    });
+  });
+});
 describe("GET /users는", () => {
   const users = [
-    { userId: "hi", name: "alice" },
-    { userId: "hehe", name: "bek" },
-    { userId: "huhu", name: "chris" }
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
   ];
   before(() => {
     return sequelize.sync({ force: true });
@@ -31,9 +82,9 @@ describe("GET /users는", () => {
 
 describe("GET /users/:id 는", () => {
   const users = [
-    { userId: "hi", name: "alice" },
-    { userId: "hehe", name: "bek" },
-    { userId: "huhu", name: "chris" }
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
   ];
   before(() => {
     return sequelize.sync({ force: true });
@@ -74,6 +125,7 @@ describe("POST users는", () => {
   });
 
   describe("성공시", async () => {
+    let userId: string = "hello";
     let name: string = "kim";
     let password: string = "test";
     let body: any;
@@ -81,7 +133,7 @@ describe("POST users는", () => {
     before(done => {
       request(app)
         .post("/users")
-        .send({ name, password })
+        .send({ userId, name, password })
         .expect(201)
         .end((err, res) => {
           body = res.body;
@@ -98,9 +150,9 @@ describe("POST users는", () => {
 
 describe("PUT /users/:id", () => {
   const users = [
-    { userId: "hi", name: "alice" },
-    { userId: "hehe", name: "bek" },
-    { userId: "huhu", name: "chris" }
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
   ];
 
   before(() => {
@@ -152,9 +204,9 @@ describe("PUT /users/:id", () => {
 
 describe("DELETE /users/:id는", () => {
   const users = [
-    { userId: "hi", name: "alice" },
-    { userId: "hehe", name: "bek" },
-    { userId: "huhu", name: "chris" }
+    { userId: "test", name: "alice", password: "test" },
+    { userId: "hehe", name: "bek", password: "test" },
+    { userId: "huhu", name: "chris", password: "test" }
   ];
 
   before(() => {
@@ -190,7 +242,7 @@ describe("DELETE /users/:id는", () => {
   });
 });
 
-describe.only("POST /users/login", () => {
+describe("POST /users/login", () => {
   const users = [
     { userId: "test", name: "alice", password: "test" },
     { userId: "hehe", name: "bek", password: "test" },

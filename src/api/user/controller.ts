@@ -5,6 +5,12 @@ import { validationResult } from "express-validator";
 import createJWT from "../../utils/createJWT";
 
 export default {
+  me: async (req: any, res: Response) => {
+    if (req.user) {
+      return res.status(200).json(responseMessage(true, "", req.user));
+    }
+    return res.status(404).json(responseMessage(false, "로그인이 필요합니다."));
+  },
   index: async (req: Request, res: Response) => {
     try {
       const users = await User.findAll();

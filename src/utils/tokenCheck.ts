@@ -7,10 +7,11 @@ const tokenCheck = async (req: any, res: Response, next: NextFunction) => {
     const user = await decodeJWT(token);
     if (user) {
       req.user = user;
-    } else {
-      req.user = undefined;
     }
+  } else {
+    req.user = undefined;
   }
+  next();
 };
 
 export default tokenCheck;
