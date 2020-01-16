@@ -3,9 +3,12 @@ import {
   Column,
   DataType,
   Model,
-  BelongsTo
+  BelongsTo,
+  HasMany,
+  ForeignKey
 } from "sequelize-typescript";
 import User from "./User";
+import Image from "./Image";
 
 @Table({
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -24,6 +27,13 @@ export default class Board extends Model<Board> {
   })
   content!: string;
 
-  @BelongsTo(() => User, "userId")
+  @ForeignKey(() => User)
+  @Column
+  userId!: number;
+
+  @BelongsTo(() => User)
   author!: User;
+
+  @HasMany(() => Image)
+  images?: Image[];
 }

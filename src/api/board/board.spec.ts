@@ -3,7 +3,6 @@ import request from "supertest";
 import "should";
 import app from "../../app";
 import { sequelize } from "../../config/config";
-import Board from "../../config/models/Board";
 
 describe("GET /boards", () => {
   before(() => {
@@ -127,11 +126,12 @@ describe("POST /boards는", () => {
     let title: string = "제목";
     let content: string = "내용";
     let body: any;
+    let images = [{ src: "사진1" }, { src: "사진2" }];
 
     before(done => {
       request(app)
         .post("/boards")
-        .send({ title, content })
+        .send({ title, content, images })
         .expect(201)
         .end((err, res) => {
           body = res.body;

@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 import responseMessage from "../../utils/responseMessage";
 import Board from "../../config/models/Board";
 import User from "../../config/models/User";
+import Image from "../../config/models/Image";
 export default {
   index: async (req: Request, res: Response) => {
     try {
@@ -40,16 +41,25 @@ export default {
       return res.status(400).json({ errors: errors.array() });
     }
     const {
-      body: { title, content }
+      body: { title, content, images }
     } = req;
 
     try {
       const user = await User.findOne({ where: { id: 1 } });
-      const board = await Board.create({ title, content, userId: user?.id });
-      await board.save();
-      user?.boards?.push(board);
+      const newBoard = await Board.create({ title, content, userId: user?.id });
+      await newBoard.save();
+      user?.boards?.push(newBoard);
       await user?.save();
-      return res.status(200).json(responseMessage(true, "", board));
+      if (images) {
+        for (let image of images) {
+          const newImage = await Image.create({
+            src: image.src,
+            boardId: newBoard.id
+          });
+          newBoard.images?.push(newImage);
+        }
+      }
+      return res.status(200).json(responseMessage(true, "", newBoard));
     } catch (error) {
       console.error("error : ", error);
       return res.status(404).json(responseMessage(false, error.message));
