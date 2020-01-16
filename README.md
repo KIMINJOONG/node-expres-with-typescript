@@ -9,8 +9,10 @@
 - [x] user
 - [x] board test code
 - [x] board
-- [ ] login
-- [ ] createJWT
+- [x] login
+- [x] createJWT
+- [x] decodJWT
+- [ ] image test code
 
 ---
 
