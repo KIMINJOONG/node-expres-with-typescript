@@ -3,6 +3,9 @@ import request from "supertest";
 import "should";
 import app from "../../app";
 import { sequelize } from "../../config/config";
+import Board from "../../config/models/Board";
+import Image from "../../config/models/Image";
+import User from "../../config/models/User";
 
 describe("GET /boards", () => {
   before(() => {
@@ -67,11 +70,12 @@ describe("GET /boards/:id는", () => {
     let title: string = "제목";
     let content: string = "내용";
     let body: any;
+    let images = [{ src: "사진1" }, { src: "사진2" }];
 
     before(done => {
       request(app)
         .post("/boards")
-        .send({ title, content })
+        .send({ title, content, images })
         .expect(201)
         .end((err, res) => {
           body = res.body;
@@ -79,11 +83,12 @@ describe("GET /boards/:id는", () => {
         });
     });
 
-    it("해당 아이디의 게시글 객체를 반환함", done => {
+    it("해당 아이디의 게시글 객체와 해당 게시글의 이미지 array를 반환함", done => {
       request(app)
         .get("/boards/1")
         .end((err, res) => {
           res.body.data.should.have.property("id", 1);
+          res.body.data.images.should.be.instanceOf(Array);
           done();
         });
     });
@@ -203,7 +208,36 @@ describe("PUT /boards/:id는", () => {
   });
 });
 
-describe("DELETE /boards/:id", () => {
+describe.only("DELETE /boards/:id", () => {
+  before(() => {
+    return sequelize.sync({ force: true });
+  });
+  before(() => {
+    const users = [
+      { userId: "test", name: "alice", password: "test" },
+      { userId: "hehe", name: "bek", password: "test" },
+      { userId: "huhu", name: "chris", password: "test" }
+    ];
+    return User.bulkCreate(users);
+  });
+
+  before(() => {
+    const board = [
+      {
+        title: "제목",
+        content: "내용",
+        userId: 1
+      }
+    ];
+    return Board.bulkCreate(board);
+  });
+  before(() => {
+    const images = [
+      { src: "사진1", boardId: 1 },
+      { src: "사진2", boardId: 1 }
+    ];
+    return Image.bulkCreate(images);
+  });
   describe("성공시", () => {
     it("200을 반환한다.", done => {
       request(app)

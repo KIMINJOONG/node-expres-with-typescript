@@ -25,7 +25,10 @@ export default {
     }
 
     try {
-      const board = await Board.findOne({ where: { id: parsedInt } });
+      const board = await Board.findOne({
+        where: { id: parsedInt },
+        include: [Image]
+      });
       if (!board) {
         return res
           .status(404)
