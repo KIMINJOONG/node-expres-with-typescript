@@ -5,7 +5,8 @@ import {
   Model,
   BelongsTo,
   HasMany,
-  ForeignKey
+  ForeignKey,
+  AllowNull
 } from "sequelize-typescript";
 import User from "./User";
 import Image from "./Image";
@@ -26,6 +27,18 @@ export default class Board extends Model<Board> {
     comment: "내용"
   })
   content!: string;
+
+  @Column({
+    type: DataType.STRING,
+    comment: "대회 시작 날짜"
+  })
+  competitionStartDate: string | undefined;
+
+  @Column({
+    type: DataType.STRING,
+    comment: "대회 장소"
+  })
+  place: string | undefined;
 
   @ForeignKey(() => User)
   @Column

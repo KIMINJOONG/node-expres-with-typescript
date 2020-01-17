@@ -111,32 +111,32 @@ describe("GET /boards/:id는", () => {
   });
 });
 
-describe("POST /boards는", () => {
+describe.only("POST /boards는", () => {
   before(() => {
     return sequelize.sync({ force: true });
   });
   describe("성공시", () => {
-    let name: string = "kim";
-    let password: string = "test";
-
-    before(done => {
-      request(app)
-        .post("/users")
-        .send({ name, password })
-        .expect(201)
-        .end((err, res) => {
-          done();
-        });
+    before(() => {
+      const users = [
+        { userId: "test", name: "alice", password: "test" },
+        { userId: "hehe", name: "bek", password: "test" },
+        { userId: "huhu", name: "chris", password: "test" }
+      ];
+      return User.bulkCreate(users);
     });
-    let title: string = "제목";
-    let content: string = "내용";
     let body: any;
-    let images = [{ src: "사진1" }, { src: "사진2" }];
+    let board = {
+      title: "제목",
+      content: "내용",
+      images: [{ src: "사진1" }, { src: "사진2" }],
+      competitionStartDate: "2020-02-15",
+      place: "강남구 삼성동"
+    };
 
     before(done => {
       request(app)
         .post("/boards")
-        .send({ title, content, images })
+        .send(board)
         .expect(201)
         .end((err, res) => {
           body = res.body;
@@ -208,7 +208,7 @@ describe("PUT /boards/:id는", () => {
   });
 });
 
-describe.only("DELETE /boards/:id", () => {
+describe("DELETE /boards/:id", () => {
   before(() => {
     return sequelize.sync({ force: true });
   });

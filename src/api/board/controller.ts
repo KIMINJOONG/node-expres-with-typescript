@@ -44,12 +44,18 @@ export default {
       return res.status(400).json({ errors: errors.array() });
     }
     const {
-      body: { title, content, images }
+      body: { title, content, images, competitionStartDate, place }
     } = req;
 
     try {
       const user = await User.findOne({ where: { id: 1 } });
-      const newBoard = await Board.create({ title, content, userId: user?.id });
+      const newBoard = await Board.create({
+        title,
+        content,
+        competitionStartDate,
+        place,
+        userId: user?.id
+      });
       await newBoard.save();
       user?.boards?.push(newBoard);
       await user?.save();
