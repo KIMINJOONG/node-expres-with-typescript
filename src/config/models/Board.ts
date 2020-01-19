@@ -5,8 +5,7 @@ import {
   Model,
   BelongsTo,
   HasMany,
-  ForeignKey,
-  AllowNull
+  ForeignKey
 } from "sequelize-typescript";
 import User from "./User";
 import Image from "./Image";
@@ -29,11 +28,28 @@ export default class Board extends Model<Board> {
   content!: string;
 
   @Column({
+    type: DataType.NUMBER,
+    comment: "타입"
+  })
+  type!: number;
+
+  @Column({
+    type: DataType.NUMBER,
+    comment: "장르"
+  })
+  genre!: number;
+
+  @Column({
     type: DataType.STRING,
     comment: "대회 시작 날짜"
   })
   competitionStartDate: string | undefined;
 
+  @Column({
+    type: DataType.NUMBER,
+    comment: "국가"
+  })
+  country: number | undefined;
   @Column({
     type: DataType.STRING,
     comment: "대회 장소"
