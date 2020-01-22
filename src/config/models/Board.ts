@@ -28,13 +28,13 @@ export default class Board extends Model<Board> {
   content!: string;
 
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.INTEGER,
     comment: "타입"
   })
-  type!: number;
+  category!: number;
 
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.INTEGER,
     comment: "장르"
   })
   genre!: number;
@@ -46,7 +46,7 @@ export default class Board extends Model<Board> {
   competitionStartDate: string | undefined;
 
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.INTEGER,
     comment: "국가"
   })
   country: number | undefined;

@@ -5,16 +5,16 @@ type division = "type" | "genre";
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
   collate: "utf8mb4_general_ci"
 })
-export default class Code extends Model<Code> {
+export default class Category extends Model<Category> {
   @Column({
     type: DataType.STRING,
-    comment: "코드 명"
+    comment: "카테고리 명"
   })
   name!: string;
 
   @Column({
     type: DataType.ENUM("type", "genre"),
-    comment: "코드 구분"
+    comment: "카테고리 코드 구분"
   })
   division!: division;
 }
